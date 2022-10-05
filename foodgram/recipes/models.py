@@ -23,10 +23,11 @@ class Recipes(models.Model):
         through='IngredientsRecipes',
     )
     name = models.CharField(
+        max_length=200,
         verbose_name='Название рецепта',
-        max_length=200
     )
-    image = models.TextField(
+    image = models.ImageField(
+        upload_to='recipes/',
         verbose_name='Изображение рецепта',
     )
     text = models.TextField(

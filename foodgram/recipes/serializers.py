@@ -6,6 +6,7 @@ from tags.models import Tags
 from tags.serializers import TagsSerializer
 from users.serializers import UserSerializer
 from ingredients.models import Ingredients
+from recipes.core import Base64ImageField
 
 
 class IngredientsRecipesSerializer(serializers.ModelSerializer):
@@ -26,6 +27,7 @@ class BaseRecipesSerializer(serializers.ModelSerializer):
                                                many=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
+    image = Base64ImageField()
 
     class Meta:
         model = Recipes
@@ -59,9 +61,6 @@ class WriteRecipesSerializer(BaseRecipesSerializer):
                                               queryset=Tags.objects.all())
     # image = Base64Field
 
-    def validate(self, attrs):
-        return attrs
-
     def validate_tags(self, tags):
         if len(tags) != len(set(tags)):
             message = 'Тэги не должны повторяться'
@@ -69,10 +68,16 @@ class WriteRecipesSerializer(BaseRecipesSerializer):
         return tags
 
     def validate_ingredients(self, ingredients):
+        if not ingredients:
+            message = 'Добавьте в рецепт хотя бы один ингредиент'
+            raise serializers.ValidationError(message)
+
         ingredient_ids = set()
         for ingredient in ingredients:
-            get_object_or_404(Ingredients, id=ingredient['ingredient']['id'])
-            ingredient_ids.add(ingredient['ingredient']['id'])
+            ingredient_id = ingredient.get('ingredient').get('id') if (
+                ingredient.get('ingredient')) else None
+            get_object_or_404(Ingredients, id=ingredient_id)
+            ingredient_ids.add(ingredient_id)
             if ingredient['amount'] <= 0:
                 message = 'Количество ингредиента должно быть положительным'
                 raise serializers.ValidationError(message)
@@ -81,6 +86,18 @@ class WriteRecipesSerializer(BaseRecipesSerializer):
             raise serializers.ValidationError(message)
 
         return ingredients
+
+    @staticmethod
+    def create_tags_and_ingredients(recipe, tags, ingredients):
+        for tag in tags:
+            TagsRecipes.objects.create(recipe_id=recipe.id, tag_id=tag.id)
+
+        for ingredient in ingredients:
+            IngredientsRecipes.objects.create(
+                ingredient_id=ingredient['ingredient']['id'],
+                recipe_id=recipe.id,
+                amount=ingredient['amount']
+            )
 
     def create(self, validated_data):
         recipe = Recipes.objects.create(
@@ -91,19 +108,22 @@ class WriteRecipesSerializer(BaseRecipesSerializer):
                 cooking_time=validated_data.get('cooking_time'),
             )
 
-        tags = validated_data.pop('tags')
-        for tag in tags:
-            TagsRecipes.objects.create(recipe_id=recipe.id, tag_id=tag.id)
-
-        ingredients = validated_data.pop('recipe_ingredients')
-        for ingredient in ingredients:
-            IngredientsRecipes.objects.create(
-                ingredient_id=ingredient['ingredient']['id'],
-                recipe_id=recipe.id,
-                amount=ingredient['amount']
-            )
+        self.create_tags_and_ingredients(
+            recipe,
+            validated_data.pop('tags'),
+            validated_data.pop('recipe_ingredients')
+        )
 
         return recipe
 
     def update(self, instance, validated_data):
-        pass
+        TagsRecipes.objects.filter(recipe=instance).delete()
+        IngredientsRecipes.objects.filter(recipe=instance).delete()
+
+        self.create_tags_and_ingredients(
+            instance,
+            validated_data.pop('tags'),
+            validated_data.pop('recipe_ingredients')
+        )
+
+        return super().update(instance, validated_data)

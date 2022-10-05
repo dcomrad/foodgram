@@ -136,20 +136,18 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.CustomPagination'
 }
 
 DJOSER = {
     'HIDE_USERS': False,
 
     'PERMISSIONS': {
-        'user': ['rest_framework.permissions.AllowAny'],
+        'user': ['rest_framework.permissions.IsAuthenticated'],
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
 
     'SERIALIZERS': {
-        # 'set_password': 'djoser.serializers.SetPasswordSerializer',
-        # 'user': 'djoser.serializers.UserSerializer',
-        # 'current_user': 'djoser.serializers.UserSerializer',
         'user': 'users.serializers.UserSerializer',
         'current_user': 'users.serializers.UserSerializer',
     }

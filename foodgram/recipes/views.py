@@ -11,38 +11,39 @@ from django.db.models import Sum
 from django.http import FileResponse
 from wsgiref.util import FileWrapper
 from .permissions import IsAdminOrOwner
+from django.conf import settings
+import os
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
     """
     Вьюсет обработки рецептов
     """
-    ALLOWABLE_ENUM = [0, 1]
+    ALLOWABLE_ENUM = ['0', '1']
+    FILEPATH = os.path.join(settings.MEDIA_ROOT, 'recipes', 'cart')
+
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('author',)
 
     def get_queryset(self):
         """
         Фильтрация рецептов по параметрам GET-запроса
         """
-        def get_request_param(param, enum=None):
+        def get_request_param(param):
             result = self.request.GET.get(param, '')
-            result = int(result) if result.isdigit() else None
-            if result is not None and enum:
-                result = result if result in enum else None
+            result = int(result) if (
+                result.isdigit() and result in self.ALLOWABLE_ENUM) else None
             return result
 
-        is_favorited = get_request_param('is_favorited', self.ALLOWABLE_ENUM)
-        is_in_shopping_cart = get_request_param('is_in_shopping_cart',
-                                                self.ALLOWABLE_ENUM)
-        author_id = get_request_param('author')
+        is_favorited = get_request_param('is_favorited')
+        is_in_shopping_cart = get_request_param('is_in_shopping_cart')
         tag_slugs = self.request.GET.getlist('tags', [])
 
         queryset = Recipes.objects.all()
 
-        if author_id:
-            queryset = queryset.filter(author_id=author_id)
-
         if tag_slugs:
-            queryset = queryset.filter(tags__slug__in=tag_slugs)
+            queryset = queryset.filter(tags__slug__in=tag_slugs).distinct()
 
         if is_favorited:
             favorited_recipes = self.request.user.favorites.all().values_list(
@@ -73,12 +74,19 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     @action(detail=False)
     def download_shopping_cart(self, request):
+        """
+        Функция обработки запроса скачивания списка ингредиентов, добавленных
+        в корзину. Выгружает в файл в .txt формате
+        """
         ingredients = IngredientsRecipes.objects.filter(
             recipe__cart__user=request.user).values(
                 'ingredient__name', 'ingredient__measurement_unit').order_by(
                     'ingredient__name').annotate(amount=Sum('amount'))
 
-        filename = f'Список покупок {request.user.username}.txt'
+        if not os.path.exists(self.FILEPATH):
+            os.makedirs(self.FILEPATH)
+        unique_filename = f'Список покупок {self.request.user.username}.txt'
+        filename = os.path.join(self.FILEPATH, unique_filename)
 
         with open(filename, mode='w', encoding='utf-8') as file:
             for ingredient in ingredients:

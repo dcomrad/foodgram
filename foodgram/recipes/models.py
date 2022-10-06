@@ -47,8 +47,8 @@ class Recipes(models.Model):
 
     class Meta:
         ordering = ('-created',)
-        verbose_name = 'Тэг'
-        verbose_name_plural = 'Тэги'
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
 
 
 class TagsRecipes(models.Model):

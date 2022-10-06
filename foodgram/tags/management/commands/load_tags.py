@@ -1,8 +1,10 @@
-from django.core.management.base import BaseCommand
 import json
 import os
-from tags.models import Tags
+
 from django.conf import settings
+from django.core.management.base import BaseCommand
+
+from tags.models import Tags
 
 
 class Command(BaseCommand):

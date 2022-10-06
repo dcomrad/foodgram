@@ -1,19 +1,21 @@
-from rest_framework import viewsets
-from recipes.models import Recipes, Favorites, ShoppingCart, IngredientsRecipes
-from recipes.core import SimpleRecipesSerializer
-from recipes.serializers import ReadRecipesSerializer, WriteRecipesSerializer
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+import os
+from wsgiref.util import FileWrapper
+
+from django.conf import settings
 from django.db.models import Sum
 from django.http import FileResponse
-from wsgiref.util import FileWrapper
-from .permissions import IsAdminOrOwner
-from django.conf import settings
-import os
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from recipes.core import SimpleRecipesSerializer
+from recipes.models import Favorites, IngredientsRecipes, Recipes, ShoppingCart
+from recipes.serializers import ReadRecipesSerializer, WriteRecipesSerializer
+
+from .permissions import IsAdminOrOwner
 
 
 class RecipesViewSet(viewsets.ModelViewSet):

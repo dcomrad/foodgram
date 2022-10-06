@@ -90,15 +90,19 @@ class WriteRecipesSerializer(BaseRecipesSerializer):
 
     @staticmethod
     def create_tags_and_ingredients(recipe, tags, ingredients):
-        for tag in tags:
-            TagsRecipes.objects.create(recipe_id=recipe.id, tag_id=tag.id)
+        tag_objs = list(
+            TagsRecipes(recipe_id=recipe.id, tag_id=tag.id) for tag in tags
+        )
+        TagsRecipes.objects.bulk_create(tag_objs)
 
-        for ingredient in ingredients:
-            IngredientsRecipes.objects.create(
+        ingredient_objs = list(
+            IngredientsRecipes(
                 ingredient_id=ingredient['ingredient']['id'],
                 recipe_id=recipe.id,
                 amount=ingredient['amount']
-            )
+            ) for ingredient in ingredients
+        )
+        IngredientsRecipes.objects.bulk_create(ingredient_objs)
 
     def create(self, validated_data):
         recipe = Recipes.objects.create(

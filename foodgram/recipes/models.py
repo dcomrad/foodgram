@@ -62,7 +62,7 @@ class TagsRecipes(models.Model):
     )
 
     def __str__(self):
-        return f'{self.tag} {self.recipe}'
+        return f'{self.tag.name} - {self.recipe.name}'
 
 
 class IngredientsRecipes(models.Model):
@@ -80,7 +80,7 @@ class IngredientsRecipes(models.Model):
     )
 
     def __str__(self):
-        return f'{self.ingredient}: {self.amount}'
+        return f'{self.ingredient.name}: {self.amount}'
 
 
 class ShoppingCart(models.Model):
@@ -96,7 +96,7 @@ class ShoppingCart(models.Model):
     )
 
     def __str__(self):
-        return f'{self.user}:{self.recipe}'
+        return f'{self.user.username}: {self.recipe.name}'
 
     class Meta:
         verbose_name = 'Корзина покупателя'
@@ -115,7 +115,7 @@ class Favorites(models.Model):
     )
 
     def __str__(self):
-        return f'{self.user}:{self.recipe}'
+        return f'{self.user.username}: {self.recipe.name}'
 
     class Meta:
         verbose_name = 'Избранное покупателя'

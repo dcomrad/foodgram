@@ -67,7 +67,7 @@ class SubscriptionView(APIView):
 
         deleted, _ = Followers.objects.filter(user=request.user,
                                               author_id=user_id).delete()
-        if deleted:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
+        if not deleted:
             return self.bad_request('Вы не подписаны на этого пользователя')
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

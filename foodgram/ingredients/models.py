@@ -13,7 +13,7 @@ class Ingredients(models.Model):
     )
 
     def __str__(self):
-        return f'{self.name}({self.measurement_unit})'
+        return f'{self.name} ({self.measurement_unit})'
 
     class Meta:
         ordering = ['name', 'measurement_unit']

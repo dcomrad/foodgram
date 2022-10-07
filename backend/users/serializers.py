@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from recipes.core import SimpleRecipesSerializer
+from rest_framework import serializers
 from users.models import Followers, User
 
 

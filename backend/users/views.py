@@ -1,10 +1,9 @@
+from api.pagination import CustomPagination
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from api.pagination import CustomPagination
 from users.models import Followers, User
 from users.serializers import UserSubscriptionSerializer
 

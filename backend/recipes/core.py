@@ -1,9 +1,8 @@
 import base64
 
 from django.core.files.base import ContentFile
-from rest_framework import serializers
-
 from recipes.models import Recipes
+from rest_framework import serializers
 
 
 class SimpleRecipesSerializer(serializers.ModelSerializer):

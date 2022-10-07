@@ -15,7 +15,7 @@ services:
       - ./.env
 
   backend:
-    image: dcomrad/foodgram-backend
+    image: dcomrad/foodgram_backend
 
     container_name: foodgram-backend
 
@@ -39,7 +39,7 @@ services:
       - ./.env
 
   frontend:
-    image: dcomrad/foodgram-frontend
+    image: dcomrad/foodgram_frontend
 
     container_name: foodgram-frontend
 

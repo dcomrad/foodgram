@@ -8,8 +8,7 @@ from ingredients.models import Ingredients
 
 
 class Command(BaseCommand):
-    FILEPATH = os.path.join(settings.BASE_DIR, '..', 'data',
-                            'ingredients.json')
+    FILEPATH = os.path.join(settings.BASE_DIR, 'data', 'ingredients.json')
 
     def handle(self, *args, **options):
         with open(self.FILEPATH, 'rb') as file:

@@ -8,7 +8,7 @@ from tags.models import Tags
 
 
 class Command(BaseCommand):
-    FILEPATH = os.path.join(settings.BASE_DIR, '..', 'data', 'tags.json')
+    FILEPATH = os.path.join(settings.BASE_DIR, 'data', 'tags.json')
 
     def handle(self, *args, **options):
         with open(self.FILEPATH, 'rb') as file:

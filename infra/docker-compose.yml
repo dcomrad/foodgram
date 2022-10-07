@@ -16,7 +16,7 @@ services:
 
   backend:
     build:
-      context: ../foodgram/
+      context: ../backend/
       dockerfile: Dockerfile
 
     container_name: foodgram-backend

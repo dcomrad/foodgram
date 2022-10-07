@@ -131,10 +131,10 @@ class BaseShoppingCartFavoriteView(APIView):
 
         deleted, _ = self.model.objects.filter(user=request.user,
                                                recipe_id=recipe_id).delete()
-        if deleted:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
+        if not deleted:
             return self.bad_request(f'Такого рецепта нет в {self.where}')
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ShoppingCartView(BaseShoppingCartFavoriteView):

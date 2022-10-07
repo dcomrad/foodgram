@@ -60,7 +60,6 @@ class WriteRecipesSerializer(BaseRecipesSerializer):
     """Сериализатор рецептов для метода POST"""
     tags = serializers.PrimaryKeyRelatedField(many=True,
                                               queryset=Tags.objects.all())
-    # image = Base64Field
 
     def validate_tags(self, tags):
         if len(tags) != len(set(tags)):

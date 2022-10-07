@@ -15,9 +15,7 @@ services:
       - ./.env
 
   backend:
-    build:
-      context: ../backend/
-      dockerfile: Dockerfile
+    image: dcomrad/foodgram-backend
 
     container_name: foodgram-backend
 
@@ -41,9 +39,7 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: dcomrad/foodgram-frontend
 
     container_name: foodgram-frontend
 

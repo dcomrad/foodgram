@@ -9,7 +9,7 @@ services:
     restart: always
 
     volumes:
-      - /var/lib/postgresql/data/
+      - postrgresql_data:/var/lib/postgresql/data/
 
     env_file:
       - ./.env
@@ -62,13 +62,13 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
-      - static_value:/var/html/static/
-      - media_value:/var/html/media/
+      - static_value:/var/html/static_files/
+      - media_value:/var/html/media_files/
 
     depends_on:
       - backend
-      - frontend
 
 volumes:
   static_value:
   media_value:
+  postrgresql_data:

@@ -3,7 +3,7 @@
 ```
 Доменное имя: http://praktikum3.ddns.net/
 IP-адрес: 51.250.85.212
-Логин администратора: admin
+Логин администратора: admin@yandex.ru
 Пароль администратора: flvbybcnhfnjh
 ```
 

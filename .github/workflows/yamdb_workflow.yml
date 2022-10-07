@@ -49,7 +49,7 @@ jobs:
         name: Push backend application to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          context: foodgram
+          context: backend
           push: true
           tags: dcomrad/foodgram_backend:latest
 

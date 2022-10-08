@@ -10,4 +10,4 @@ class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientsSerializer
     pagination_class = None
     filter_backends = (DjangoFilterBackend, IngredientSearchFilter)
-    search_fields = ('@name',)
+    search_fields = ('^name',)

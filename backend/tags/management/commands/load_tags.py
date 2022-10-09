@@ -15,12 +15,14 @@ class Command(BaseCommand):
                 message = 'Загрузка данных начата...'
                 self.stdout.write(self.style.SUCCESS(message))
                 tags = json.load(file)
-                for tag in tags:
-                    Tags.objects.create(
+                tags_obj = list(
+                    Tags(
                         name=tag['name'],
                         color=tag['color'],
-                        slug=tag['slug'],
-                    )
+                        slug=tag['slug']
+                    ) for tag in tags
+                )
+                Tags.objects.bulk_create(tags_obj)
                 message = 'Список тэгов успешно загружены в базу данных'
                 self.stdout.write(self.style.SUCCESS(message))
             except Exception as ex:

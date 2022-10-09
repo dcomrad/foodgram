@@ -15,11 +15,13 @@ class Command(BaseCommand):
                 message = 'Загрузка данных начата...'
                 self.stdout.write(self.style.SUCCESS(message))
                 ingredients = json.load(file)
-                for ingredient in ingredients:
-                    Ingredients.objects.create(
+                ingredients_obj = list(
+                    Ingredients(
                         name=ingredient['name'],
                         measurement_unit=ingredient['measurement_unit']
-                    )
+                    ) for ingredient in ingredients
+                )
+                Ingredients.objects.bulk_create(ingredients_obj)
                 message = 'Список ингредиентов успешно загружены в базу данных'
                 self.stdout.write(self.style.SUCCESS(message))
             except Exception as ex:

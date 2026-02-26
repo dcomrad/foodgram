@@ -1,12 +1,5 @@
 ![Foodgram](https://github.com/dcomrad/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
-```
-Доменное имя: http://praktikum3.ddns.net/
-IP-адрес: 51.250.85.212
-Логин администратора: admin@yandex.ru
-Пароль администратора: flvbybcnhfnjh
-```
-
 # Проект Foodgram (Продуктовый помощник)
 ```Дипломный проект по специальности "Python-разработчик" на обучающей платформе Яндекс.Практикум```
 
